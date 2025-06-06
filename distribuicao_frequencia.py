@@ -106,3 +106,4 @@ df_bebes= analisar_dados_estatisticos(dados_idades_bebes, "Idade de Bebes de uma
 print(df_bebes.to_string(float_format="%.2f"))
 
 print(df_idades.to_json(indent=4, orient='records', force_ascii=False))
+
