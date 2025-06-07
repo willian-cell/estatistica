@@ -83,3 +83,4 @@ print(f"\n Média Ponderada da Satisfação do usuário: {media_satisfacao_ponde
 
 media_simples = sum(amostra_completa) / len(amostra_completa)
 print(f"\n Média simples da Satisfação do usuário: {media_simples:.2f}")
+
