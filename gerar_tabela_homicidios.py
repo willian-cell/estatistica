@@ -35,3 +35,4 @@ print(df)
 
 output_csv_file = "taxa_homicidios.csv"
 df.to_csv(output_csv_file, index=False)
+
