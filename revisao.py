@@ -117,6 +117,7 @@ axes[2].set_title("Distribuição de Densidade (KDE)")
 axes[2].set_xlabel("Variação percentual diária")
 axes[2].set_ylabel("Densidade")
 
+
 # Ajustar layout para evitar sobreposição
 plt.tight_layout()
 plt.show()

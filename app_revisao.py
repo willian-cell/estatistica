@@ -10,16 +10,15 @@ st.title(" WBO - Tecnologia: Analisador Dinâmico ")
 # Upload do arquivo ou uso do caminho fixo
 data = 'data/revisao.gz'
 
-
 if data is not None:
     df = pd.read_csv(data)
-    
+
     # Limpeza dos dados
     df = df.drop(columns=['ADS'])
     df = df.rename(columns={'Unnamed: 0': 'Data'})
     df['Data'] = pd.to_datetime(df['Data'])
     df = df.set_index('Data')
-    
+
     st.success("Dados carregados com sucesso!")
 
     # Informações básicas
@@ -34,7 +33,6 @@ if data is not None:
     st.subheader("🔎 Selecione ou digite o ativo para análise")
 
     col1, col2 = st.columns([2, 3])
-
     with col1:
         ativo_selecionado = st.selectbox("Escolha um ativo disponível:", ativos)
 
@@ -48,18 +46,16 @@ if data is not None:
         st.error(f"O ativo '{ativo_digitado}' não foi encontrado nos dados.")
         st.stop()
 
-
     # Análise estatística
     maior_valor = df[ativo].max()
     data_maior = df[ativo].idxmax()
     menor_valor = df[ativo].min()
     data_menor = df[ativo].idxmin()
-
     media = df[ativo].mean()
     mediana = df[ativo].median()
     moda = df[ativo].mode()
 
-    st.subheader(f" Estatísticas para o ativo: {ativo}")
+    st.subheader(f"Estatísticas para o ativo: {ativo}")
     col1, col2 = st.columns(2)
     with col1:
         st.metric("Maior Variação", f"{maior_valor:.4f}", f"{data_maior.strftime('%d/%m/%Y')}")
@@ -72,9 +68,8 @@ if data is not None:
         else:
             st.write("Amodal")
 
-    # Estatística de Variabilidade
+    # Estatísticas de variabilidade
     st.subheader("Estatísticas de Variabilidade")
-
     desvio_absoluto = abs(df[ativo] - media)
     desvio_absoluto_medio = desvio_absoluto.mean()
     variancia = df[ativo].var(ddof=1)
@@ -87,19 +82,39 @@ if data is not None:
     with col4:
         st.metric("Desvio Padrão", f"{desvio_padrao:.4f}")
 
-
-    # Gráfico de linha
-    st.subheader(" Série Temporal")
+    # Gráfico de linha - Série Temporal
+    st.subheader("Série Temporal")
     fig, ax = plt.subplots(figsize=(12, 4))
     sns.lineplot(data=df[ativo], ax=ax)
     ax.set_title(f"Variação diária de {ativo}")
     ax.set_ylabel("Valor")
     st.pyplot(fig)
 
+    # Análises gráficas agrupadas: Histograma, Boxplot e Densidade
+    st.subheader("Distribuições Estatísticas")
+
+    serie_as_dataframe = df[ativo].dropna()  # remover possíveis NaNs
+    fig2, axes = plt.subplots(3, 1, figsize=(10, 12))
+
     # Histograma
-    st.subheader(" Distribuição dos dados")
-    fig2, ax2 = plt.subplots()
-    sns.histplot(df[ativo], bins=30, kde=True, ax=ax2)
+    sns.histplot(data=serie_as_dataframe, ax=axes[0], kde=False, color='skyblue')
+    axes[0].set_title("Histograma")
+    axes[0].set_xlabel("Variação percentual diária")
+    axes[0].set_ylabel("Ocorrências")
+
+    # Boxplot
+    sns.boxplot(data=serie_as_dataframe, ax=axes[1], orient='h', color='lightgreen')
+    axes[1].set_title("Boxplot")
+    axes[1].set_xlabel("Variação percentual diária")
+    axes[1].set_ylabel("")
+
+    # Densidade (KDE)
+    sns.kdeplot(data=serie_as_dataframe, ax=axes[2], fill=True, color='orange')
+    axes[2].set_title("Distribuição de Densidade (KDE)")
+    axes[2].set_xlabel("Variação percentual diária")
+    axes[2].set_ylabel("Densidade")
+
+    plt.tight_layout()
     st.pyplot(fig2)
 
 else:
