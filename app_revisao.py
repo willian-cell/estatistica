@@ -8,7 +8,7 @@ st.set_page_config(page_title="Análise de Variações Diárias", layout="wide")
 st.title(" WBO - Tecnologia: Analisador Dinâmico ")
 
 # Upload do arquivo ou uso do caminho fixo
-data = 'data/revisao.gz'
+data = 'data/sp500_data.csv.gz'
 
 if data is not None:
     df = pd.read_csv(data)
